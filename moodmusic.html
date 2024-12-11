@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamland Music Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(to bottom, #4facfe, #00f2fe);
+            --text-color: #fff;
+            --card-gradient: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(to bottom, #ffffff, #e6e6e6);
+            --text-color: #000;
+            --card-gradient: linear-gradient(135deg, #f9f9f9, #ececec);
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(to bottom, #1a1a1a, #333333);
+            --text-color: #fff;
+            --card-gradient: linear-gradient(135deg, #444444, #666666);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 50px rgba(0, 128, 255, 0.7);
+            font-size: 3em;
+            animation: pulse 2s infinite;
+            margin-bottom: 40px;
+        }
+
+        .mood-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mood-card {
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+            background: var(--card-gradient);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: transform 0.4s, box-shadow 0.4s, background 0.3s;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .mood-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select {
+            background-color: #2d2d2d;
+            color: #fff;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        select:focus {
+            background-color: #444444;
+            border-color: #00f2fe;
+        }
+
+        .note {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            animation: float 10s infinite;
+            opacity: 0;
+        }
+
+        .note:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .note:nth-child(2) { top: 30%; left: 50%; animation-delay: 2s; }
+        .note:nth-child(3) { top: 60%; left: 80%; animation-delay: 4s; }
+        .note:nth-child(4) { top: 50%; left: 30%; animation-delay: 6s; }
+        .note:nth-child(5) { top: 70%; left: 60%; animation-delay: 8s; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-200px) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 20px #fff, 0 0 40px #00f2fe; }
+            100% { text-shadow: 0 0 40px #00f2fe, 0 0 60px #4facfe; }
+        }
+
+        .audio-controls {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            backdrop-filter: blur(15px);
+        }
+
+        .audio-controls.show {
+            display: flex;
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        audio::-webkit-media-controls-timeline {
+            background-color: white !important;
+        }
+
+        .custom-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            border: none;
+            border-radius: 10px;
+            color: black; /* Set text color to black */
+            font-size: 1em;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #fad0c4, #ff9a9e);
+            transform: scale(1.1);
+        }
+
+        footer {
+            margin-top: 30px;
+            color: black; /* Set footer text to black */
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body data-theme="system">
+    <h1>Dreamland Music Player</h1>
+
+    <!-- Floating notes -->
+    <div class="note">🎵</div>
+    <div class="note">🎶</div>
+    <div class="note">🎼</div>
+    <div class="note">🎷</div>
+    <div class="note">🎤</div>
+
+    <!-- Toggle mode -->
+    <div class="toggle-container">
+        <label for="themeToggle">Mode:</label>
+        <select id="themeToggle" onchange="changeTheme(this.value)">
+            <option value="system" selected>System Default</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </select>
+    </div>
+
+    <div class="mood-container">
+        <div class="mood-card" onclick="playMood('happy')">
+            <h2><span>😊</span>Happy</h2>
+        </div>
+        <div class="mood-card" onclick="playMood('sad')">
+            <h2><span>😢</span>Sad</h2>
+        </div>
+        <div class="mood-card" onclick="playMood('relaxed')">
+            <h2><span>😌</span>Relaxed</h2>
+        </div>
+        <div class="mood-card" onclick="playMood('focused')">
+            <h2><span>🎯</span>Focused</h2>
+        </div>
+        <div class="mood-card" onclick="playMood('energetic')">
+            <h2><span>💃</span>Energetic</h2>
+        </div>
+        <div class="mood-card" onclick="playMood('devotional')">
+            <h2><span>🙏</span>Devotional</h2>
+        </div>
+    </div>
+
+    <div class="audio-controls" id="audioControls">
+        <audio id="audioPlayer" controls loop></audio>
+        <div class="custom-buttons">
+            <button onclick="playAudio()">Play</button>
+            <button onclick="pauseAudio()">Pause</button>
+            <select id="speedControl" onchange="changeSpeed(this.value)">
+                <option value="0.25">0.25x</option>
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+    </div>
+
+    <footer>Designed to make your mood musical!</footer>
+
+    <script>
+        const songs = {
+            happy: [
+                "C:/Users/User/Downloads/Badtameez Dil - Yeh Jawaani Hai Deewani 320 Kbps (3).mp3",
+                "C:/Users/User/Downloads/Crazy-Crazy-Feeling.mp3",
+                "C:/Users/User/Downloads/Baby(PagalWorld.com.so).mp3"
+            ],
+            sad: [
+                "C:/Users/User/Downloads/128-Papa Meri Jaan - Animal 128 Kbps.mp3",
+                "C:/Users/User/Downloads/Adiga Adiga - SenSongsMp3.Co.mp3",
+                "C:/Users/User/Downloads/Ava-(Speed-Up-Tiktok-Version)(PagalWorld).mp3"
+            ],
+            relaxed: [
+                "C:/Users/User/Downloads/Pani Da Rang Male Vicky Donor 128 Kbps.mp3",
+                "C:/Users/User/Downloads/Samajavaragamana - SenSongsMp3.Co (1).mp3",
+                "C:/Users/User/Downloads/Let Me Down Slowly-(PagalSongs.Com.IN).mp3"
+            ],
+            focused: [
+                "C:/Users/User/Downloads/128-Kar Har Maidaan Fateh - Sanju 128 Kbps.mp3",
+                "C:/Users/User/Downloads/3- Dont Stop-SenSongsMp3.Co.mp3",
+                "C:/Users/User/Downloads/Weightless.mp3"
+            ],
+            energetic: [
+                "C:/Users/User/Downloads/Jai Jai Shivshankar War 128 Kbps.mp3",
+                "C:/Users/User/Downloads/Naatu Naatu (From Rrr).mp3",
+                "C:/Users/User/Downloads/Bye Bye Bye(PagalWorld.com.so).mp3"
+            ],
+            devotional: [
+                "C:/Users/User/Downloads/Namo-Namo-Ji-Shankara(PagalWorld).mp3",
+                "C:/Users/User/Downloads/Powerful Hanuman Chalisa (HanuMan)-(Mr-Jat.in).mp3",
+                "C:/Users/User/Downloads/Brother-Nic-Mp4-The-Goodness-Of-God (1).mp3"
+            ]
+        };
+
+        let currentSongIndex = { happy: 0, sad: 0, relaxed: 0, focused: 0, energetic: 0, devotional: 0 };
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioControls = document.getElementById('audioControls');
+
+        function playMood(mood) {
+            const moodSongs = songs[mood];
+            const index = currentSongIndex[mood];
+            audioPlayer.src = moodSongs[index];
+            audioPlayer.play();
+            audioControls.classList.add('show');
+            currentSongIndex[mood] = (index + 1) % moodSongs.length;
+        }
+
+        function playAudio() {
+            audioPlayer.play();
+        }
+
+        function pauseAudio() {
+            audioPlayer.pause();
+        }
+
+        function changeSpeed(speed) {
+            audioPlayer.playbackRate = parseFloat(speed);
+        }
+
+        function changeTheme(theme) {
+            const root = document.body;
+            if (theme === "system") {
+                root.setAttribute("data-theme", "system");
+            } else {
+                root.setAttribute("data-theme", theme);
+            }
+        }
+    </script>
+</body>
+</html>
