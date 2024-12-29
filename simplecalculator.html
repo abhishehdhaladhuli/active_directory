@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <style>
+        body{
+            background-image:linear-gradient(to right,red,blue,green);
+            display:flex;
+            justify-content: center;
+            align-items:center;
+            height:100vh;
+        }
+        .container{
+            border:5px solid black;
+            border-radius:10px;
+            padding:20px;
+            width:300px;
+            height:350px;
+        }
+        .container2{
+            display:grid;
+            grid-template-rows:repeat(4,1fr);
+            grid-template-columns:repeat(4,1fr);
+            gap:2px;
+        }
+        h1{
+            text-align:center;
+            color:yellow;
+            font-family:roboto;
+        }
+        #display{
+            width:100%;
+        }
+        button{
+            color:yellow;
+            background-color:black;
+            width:auto;
+            height:50px;
+            cursor:pointer;
+            border-radius:5px;
+        }
+        button:hover{
+            background-color:hsl(120deg,100%,10%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Calculator</h1>
+        <input id="display" type="text">
+        <div class="container2">
+        <button onclick="appendtodisplay('1')" class="keys">1</button>
+        <button onclick="appendtodisplay('2')" class="keys">2</button>
+        <button onclick="appendtodisplay('3')" class="keys">3</button>
+        <button onclick="appendtodisplay('+')" class="keys">+</button>
+        <button onclick="appendtodisplay('4')" class="keys">4</button>
+        <button onclick="appendtodisplay('5')" class="keys">5</button>
+        <button onclick="appendtodisplay('6')" class="keys">6</button>
+        <button onclick="appendtodisplay('-')" class="keys">-</button>
+        <button onclick="appendtodisplay('7')" class="keys">7</button>
+        <button onclick="appendtodisplay('8')" class="keys">8</button>
+        <button onclick="appendtodisplay('9')" class="keys">9</button>
+        <button onclick="appendtodisplay('*')" class="keys">*</button>
+        <button onclick="appendtodisplay('0')" class="keys">0</button>
+        <button onclick="cleardisplay()" class="keys">C</button>
+        <button onclick="calculate()" class="keys">=</button>
+        <button onclick="appendtodisplay('/')" class="keys">/</button>
+        <button onclick="appendtodisplay('.')" class="keys">.</button>
+    </div>
+</div>
+<script>
+    function appendtodisplay(value1){
+        document.getElementById("display").value+=value1;
+    }
+    function cleardisplay(){
+        document.getElementById("display").value= " ";
+    }
+    function calculate(){
+        try{
+        let result=eval(document.getElementById("display").value);
+        document.getElementById("display").value=result;
+        }
+        catch(e){
+        document.getElementById("display").value="Kindly enter valid inputs";
+
+        }
+    }
+</script>
+</body>
+</html>
